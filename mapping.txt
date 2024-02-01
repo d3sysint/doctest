@@ -1,0 +1,19 @@
+Steps for Field Mapping in McAfee ESM
+Identify Source Data Fields
+
+Begin by identifying the data fields provided by your log sources (e.g., firewalls, intrusion detection systems, applications). This includes fields like source IP, destination IP, timestamp, event type, etc.
+Understand McAfee ESM Fields
+
+Familiarize yourself with the default fields within McAfee ESM. These are the fields into which you’ll map your source data.
+Mapping Process
+
+For each log source, map its data fields to the corresponding fields in McAfee ESM. This might involve renaming fields or transforming data formats to align with ESM expectations.
+Custom Fields (if needed)
+
+If your log source contains data that doesn’t fit into existing ESM fields, you may need to create custom fields within ESM to accommodate this data.
+Testing and Validation
+
+After mapping, it's crucial to test and validate that the data is being correctly parsed and represented in ESM. This might involve reviewing parsed logs and verifying alert triggers.
+Adjustment and Optimization
+
+Based on your observations during testing, you might need to adjust mappings for accuracy and efficiency.
