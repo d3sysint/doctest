@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<!-- saved from url=(0072)https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/">
+
+    <title>RESTful Web API v2 — Joe Sandbox v41.0.0 Charoite documentation</title>
+    <link rel="stylesheet" type="text/css" href="./RESTful Web API v2 — Joe Sandbox v41.0.0 Charoite documentation_files/userguide">
+    <link rel="stylesheet" type="text/css" href="./RESTful Web API v2 — Joe Sandbox v41.0.0 Charoite documentation_files/userguide(1)">
+    <script data-url_root="/userguide?sphinxurl=" id="documentation_options" src="./RESTful Web API v2 — Joe Sandbox v41.0.0 Charoite documentation_files/documentation_options.js.download"></script>
+    <script src="./RESTful Web API v2 — Joe Sandbox v41.0.0 Charoite documentation_files/doctools.js.download"></script>
+    <script src="./RESTful Web API v2 — Joe Sandbox v41.0.0 Charoite documentation_files/sphinx_highlight.js.download"></script>
+    <link rel="index" title="Index" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=genindex.html">
+    <link rel="search" title="Search" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=search.html">
+    <link rel="next" title="Joe Lab API" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/joelabapi.html">
+    <link rel="prev" title="Account Management" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/usermanagement.html">
+   
+  <link rel="stylesheet" href="./RESTful Web API v2 — Joe Sandbox v41.0.0 Charoite documentation_files/userguide(2)" type="text/css">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head><body cz-shortcut-listen="true" data-new-gr-c-s-check-loaded="14.1216.0" data-gr-ext-installed="">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="restful-web-api-v2">
+<span id="webapiv2-section"></span><h1>RESTful Web API v2<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#restful-web-api-v2" title="Permalink to this heading">¶</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#introduction" title="Permalink to this heading">¶</a></h2>
+<p>The Web API enables extensive automation of major task such as sample uploading, report downloading, searching and more. The following is a documentation of the API. All API calls are implemented as <strong>POST requests</strong>.</p>
+<p>The API endpoint is: <a class="reference external" href="https://jbxcloud.joesecurity.org/api/">https://jbxcloud.joesecurity.org/api/</a></p>
+<p>The POST requests must be encoded as <code class="docutils literal notranslate"><span class="pre">multipart/form-data</span></code>.</p>
+<p>All <strong>Boolean</strong> values (<code class="docutils literal notranslate"><span class="pre">true/false</span></code>) specified in the routes below need to be encoded using <code class="docutils literal notranslate"><span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<section id="python-scripts">
+<h3>Python Scripts<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#python-scripts" title="Permalink to this heading">¶</a></h3>
+<p>Joe Security provides a convenient implementation of the API for Python: <a class="reference external" href="https://github.com/joesecurity/jbxapi">jbxapi.py</a>. It allows to easily integrate Joe Sandbox
+in your environment</p>
+<p>Some more useful scripts are available on our <a class="reference external" href="https://github.com/joesecurity/scripts">Github page</a>.</p>
+</section>
+<section id="api-key">
+<h3>API Key<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#api-key" title="Permalink to this heading">¶</a></h3>
+<p>To generate an API key, go to the “User settings” section in the User menu and select the “API Key” tab.</p>
+</section>
+<section id="responses">
+<h3>Responses<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#responses" title="Permalink to this heading">¶</a></h3>
+<p>On success, the API responds with a HTTP status <code class="docutils literal notranslate"><span class="pre">200</span></code> and a JSON object containing the response under the <code class="docutils literal notranslate"><span class="pre">data</span></code> key:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"data"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">"submission_id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"1"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="pagination">
+<span id="apiv2-pagination"></span><h4>Pagination<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#pagination" title="Permalink to this heading">¶</a></h4>
+<p>Some endpoints support pagination. If pagination is enabled, there is an extra key <code class="docutils literal notranslate"><span class="pre">pagination</span></code> in the response object. The JSON object looks as follows:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"data"</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">        </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"10001"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="s2">"pagination"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">"next"</span><span class="o">:</span><span class="w"> </span><span class="s2">"1234"</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can page through the results by sending an additional parameter <code class="docutils literal notranslate"><span class="pre">pagination_next=1234</span></code>.</p>
+<p>It is possible that fewer than the maximum amount of objects are returned per request (or even no objects at all).</p>
+<p>You reached the end of the list once there is no <code class="docutils literal notranslate"><span class="pre">next</span></code> key present.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Do not cache the pagination tokens, they can become invalid at any time.
+Treat the tokens as opaque objects, we reserve the right to change them without notice in the future.</p>
+</div>
+</section>
+<section id="on-error">
+<h4>on error<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#on-error" title="Permalink to this heading">¶</a></h4>
+<p>On error, the JSON object contains <code class="docutils literal notranslate"><span class="pre">errors</span></code> with a list of error objects containing a machine-readable code and
+a human-readable message like this:</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"errors"</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">        </span><span class="s2">"code"</span><span class="o">:</span><span class="w"> </span><span class="mf">2</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"message"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Parameter apikey is required."</span>
+<span class="w">    </span><span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>A list of error codes and associated HTTP status can be found here: <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#apiv2-error-codes"><span class="std std-ref">Error Codes</span></a>.</p>
+</section>
+</section>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#api" title="Permalink to this heading">¶</a></h2>
+<section id="v2-submission-new">
+<span id="apiv2-submission-new"></span><h3><code class="docutils literal notranslate"><span class="pre">/v2/submission/new</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-submission-new" title="Permalink to this heading">¶</a></h3>
+<p>Create a new submission from a sample, url or cookbook.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In case of a cookbook-submission, most options have no effect because they
+can be specified directly within the cookbook. See the discussion below.</p>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>sample</p></td>
+<td><p>(yes)</p></td>
+<td><p>Submit this file sample.</p></td>
+</tr>
+<tr class="row-even"><td><p>sample-url</p></td>
+<td><p>(yes)</p></td>
+<td><p>Download the file sample at this location.</p></td>
+</tr>
+<tr class="row-odd"><td><p>url</p></td>
+<td><p>(yes)</p></td>
+<td><p>Open this URL in the web browser.</p></td>
+</tr>
+<tr class="row-even"><td><p>cookbook</p></td>
+<td><p>(yes)</p></td>
+<td><p>Run this cookbook. This parameters can also be
+specified in addition to <code class="docutils literal notranslate"><span class="pre">sample</span></code> to combine
+a sample with a cookbook.</p></td>
+</tr>
+<tr class="row-odd"><td><p>command-line</p></td>
+<td><p>(yes)</p></td>
+<td><p>The string you pass here will be executed
+directly using <code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code> (Windows) or <code class="docutils literal notranslate"><span class="pre">sh</span></code>
+(macOS and Linux)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Additional <strong>optional</strong> parameters:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>systems[]</p></td>
+<td><p>auto/
+null</p></td>
+<td><p>Use this parameter multiple times to select
+more than one system.</p></td>
+</tr>
+<tr class="row-odd"><td><p>dependencies[]</p></td>
+<td><p>null</p></td>
+<td><p>Additional files, these will be copied to the same location as the sample
+for the analysis. Use the parameter multiple times to add several files.</p></td>
+</tr>
+<tr class="row-even"><td><p>tags[]</p></td>
+<td><p>null</p></td>
+<td><p>Add tags to the analysis. Can be specified multiple times.</p></td>
+</tr>
+<tr class="row-odd"><td><p>analysis-time</p></td>
+<td><p>120</p></td>
+<td><p>Set the analysis time in seconds. Note that in Joe Sandbox Cloud, the initial
+time for Live Interaction is always fixed to 90 seconds. This overrides
+any value passed here.</p></td>
+</tr>
+<tr class="row-even"><td><p>document-password</p></td>
+<td><p>null</p></td>
+<td><p>Specify a password to decrypt Microsoft Office and PDF documents.</p></td>
+</tr>
+<tr class="row-odd"><td><p>internet-access</p></td>
+<td><p>true</p></td>
+<td><p>Enable full internet access.</p></td>
+</tr>
+<tr class="row-even"><td><p>hybrid-code-analysis</p></td>
+<td><p>true</p></td>
+<td><p>Enable Hybrid Code Analysis (HCA).</p></td>
+</tr>
+<tr class="row-odd"><td><p>report-cache</p></td>
+<td><p>false</p></td>
+<td><p>Enable the report cache. Check the cache for existing
+reports before running a full analysis.</p></td>
+</tr>
+<tr class="row-even"><td><p>apk-instrumentation</p></td>
+<td><p>true</p></td>
+<td><p>Perform APK DEX code instrumentation.</p></td>
+</tr>
+<tr class="row-odd"><td><p>amsi-unpacking</p></td>
+<td><p>true</p></td>
+<td><p>Perform generic unpacking using the Microsoft Antimalware Scan Interface (AMSI)</p></td>
+</tr>
+<tr class="row-even"><td><p>powershell-logging</p></td>
+<td><p>false</p></td>
+<td><p>Enables Powershell Logging.</p></td>
+</tr>
+<tr class="row-odd"><td><p>ssl-inspection</p></td>
+<td><p>false</p></td>
+<td><p>Enable HTTPS inspection.</p></td>
+</tr>
+<tr class="row-even"><td><p>vba-instrumentation</p></td>
+<td><p>true</p></td>
+<td><p>Enable VBA instrumentation (two analyses are performed)</p></td>
+</tr>
+<tr class="row-odd"><td><p>js-instrumentation</p></td>
+<td><p>true</p></td>
+<td><p>Enable Javascript instrumentation (two analyses are performed)</p></td>
+</tr>
+<tr class="row-even"><td><p>java-jar-tracing</p></td>
+<td><p>true</p></td>
+<td><p>Enable JAVA JAR tracing (two analyses are performed)</p></td>
+</tr>
+<tr class="row-odd"><td><p>start-as-normal-user</p></td>
+<td><p>false</p></td>
+<td><p>Starts the Sample with normal user privileges</p></td>
+</tr>
+<tr class="row-even"><td><p>email-notification</p></td>
+<td><p>false</p></td>
+<td><p>Send an email notification once the analysis completes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>secondary-results</p></td>
+<td><p>false</p></td>
+<td><p>Enables secondary results such as Yara rule generation as well as several detail reports.
+Analysis will run faster with disabled secondary results</p></td>
+</tr>
+<tr class="row-even"><td><p>cookbook-setup-code</p></td>
+<td><p>null</p></td>
+<td><p>This code will be executed before the analysis is run.
+Make sure to enter valid AutoIt code.</p></td>
+</tr>
+<tr class="row-odd"><td><p>archive-password</p></td>
+<td><p>“infected”</p></td>
+<td><p>This password will be used to decrypt archives (zip, 7z, rar etc.).</p></td>
+</tr>
+<tr class="row-even"><td><p>command-line-argument</p></td>
+<td><p>null</p></td>
+<td><p>Will start the sample with the given command-line argument.
+Currently only available on Windows analyzers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>live-interaction</p></td>
+<td><p>false</p></td>
+<td><p>Use Live Interaction. Requires user interaction via
+the web UI. If enabled, disables VBA instrumentation (on Windows).</p></td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>comments</p></td>
+<td><p>null</p></td>
+<td><p>A comment for the analysis.</p></td>
+</tr>
+<tr class="row-even"><td><p>localized-internet-country</p></td>
+<td><p>null</p></td>
+<td><p>Select the country to use for routing internet access through.</p></td>
+</tr>
+<tr class="row-odd"><td><p>internet-simulation</p></td>
+<td><p>false</p></td>
+<td><p>Enable internet simulation. internet-access must be explicitly
+set to false for this option to work.</p></td>
+</tr>
+<tr class="row-even"><td><p>hybrid-decompilation</p></td>
+<td><p>false</p></td>
+<td><p>Enable Hybrid Decompilation (DEC).</p></td>
+</tr>
+<tr class="row-odd"><td><p>dotnet-tracing</p></td>
+<td><p>true</p></td>
+<td><p>Enable .NET tracing (two analyses are performed)</p></td>
+</tr>
+<tr class="row-even"><td><p>system-date</p></td>
+<td><p>false</p></td>
+<td><p>Change the analyzer’s system date (helpful for date-aware samples),
+format is: YYYY-MM-DD</p></td>
+</tr>
+<tr class="row-odd"><td><p>language-and-locale</p></td>
+<td><p>null</p></td>
+<td><p>Changes the language and locale of the analysis machine</p></td>
+</tr>
+<tr class="row-even"><td><p>archive-no-unpack</p></td>
+<td><p>false</p></td>
+<td><p>Do not unpack archives (zip, 7z etc) containing multiple files.</p></td>
+</tr>
+<tr class="row-odd"><td><p>fast-mode</p></td>
+<td><p>false</p></td>
+<td><p>Fast Mode focuses on fast analysis and detection versus deep forensic analysis.</p></td>
+</tr>
+<tr class="row-even"><td><p>disable-chained-runs</p></td>
+<td><p>false</p></td>
+<td><p>Disable chained runs. Currently applies only to Windows and Android.</p></td>
+</tr>
+<tr class="row-odd"><td><p>encrypt-with-password</p></td>
+<td><p>null</p></td>
+<td><p>Encrypt the analysis data after it is finished. See <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/submissionpage.html#encrypt-with-password"><span class="std std-ref">Analysis Encryption</span></a>
+for more information.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Additional Parameters for Joe Sandbox Cloud:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>accept-tac</p></td>
+<td><p>yes</p></td>
+<td><p>false</p></td>
+<td><p>Accept the Terms and Conditions and the Data Protection Policy of Joe Sandbox
+Cloud. This is required.</p></td>
+</tr>
+<tr class="row-odd"><td><p>url-reputation</p></td>
+<td></td>
+<td><p>false</p></td>
+<td><p>Lookup the reputation of URLs and domains to improve the analysis. <strong>This option
+will send URLs and domains to third party services and WHOIS servers!.</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>delete-after-days</p></td>
+<td></td>
+<td><p>30</p></td>
+<td><p>Delete the analysis after X days. If not set, the default value is used</p></td>
+</tr>
+</tbody>
+</table>
+<p>[1] Joe Sandbox Cloud Pro Terms and Conditions: <a class="reference external" href="https://jbxcloud.joesecurity.org/download/termsandconditions.pdf">https://jbxcloud.joesecurity.org/download/termsandconditions.pdf</a></p>
+<p>Additional parameters for on-premise and Cloud OEM installations of Joe Sandbox:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>priority</p></td>
+<td></td>
+<td><p>2</p></td>
+<td><p>Integer value between 1 and 10, higher
+value means higher priority.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="discussion">
+<h4>Discussion<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#discussion" title="Permalink to this heading">¶</a></h4>
+<p>In case the <code class="docutils literal notranslate"><span class="pre">cookbook</span></code> option is used, most other options are silently ignored since they can
+be specified inside the cookbook, see <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/cookbooks.html#cookbooks-section"><span class="std std-ref">Analysis Cookbooks</span></a>. Of the options above,
+these still work: <code class="docutils literal notranslate"><span class="pre">delete-after-days</span></code> (cloud only), <code class="docutils literal notranslate"><span class="pre">priority</span></code> (on-premise and OEM only),
+<code class="docutils literal notranslate"><span class="pre">email-notification</span></code>, <code class="docutils literal notranslate"><span class="pre">comments</span></code>, <code class="docutils literal notranslate"><span class="pre">tags[]</span></code>.</p>
+</section>
+<section id="data-object">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#data-object" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"submission_id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"10001"</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-submission-delete">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/submission/delete</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-submission-delete" title="Permalink to this heading">¶</a></h3>
+<p>Delete a submission.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>submission_id</p></td>
+<td><p>yes</p></td>
+<td><p>the id of the submission</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id1">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id1" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"deleted"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-submission-list">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/submission/list</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-submission-list" title="Permalink to this heading">¶</a></h3>
+<p>List all submissions (in descending order, starting with most recent).</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>pagination_next</p></td>
+<td><p>no</p></td>
+<td><p>A pagination token to get more results.
+(See <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#apiv2-pagination"><span class="std std-ref">Pagination</span></a>.)</p></td>
+</tr>
+<tr class="row-even"><td><p>include-shared</p></td>
+<td><p>no</p></td>
+<td><p>Return shared submissions. (By default only submissions
+belonging to the user are returned.)</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id2">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id2" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"submission_id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"10001"</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"submission_id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"10000"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-submission-info">
+<span id="apiv2-submission-info"></span><h3><code class="docutils literal notranslate"><span class="pre">/v2/submission/info</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-submission-info" title="Permalink to this heading">¶</a></h3>
+<p>Show information about a submission.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>submission_id</p></td>
+<td><p>yes</p></td>
+<td><p>the id of the submission</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id3">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id3" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"submission_id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"178"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Sample.exe"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"status"</span><span class="o">:</span><span class="w"> </span><span class="s2">"finished"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"time"</span><span class="o">:</span><span class="w"> </span><span class="s2">"2019-04-15T08:05:05+00:00"</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// present for any status after 'accepted',</span>
+<span class="w">    </span><span class="c1">// can be null if there are no analyses</span>
+<span class="w">    </span><span class="s2">"most_relevant_analysis"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"179"</span>
+<span class="w">        </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"clean"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"score"</span><span class="o">:</span><span class="w"> </span><span class="mf">30</span>
+<span class="w">    </span><span class="p">},</span>
+
+<span class="w">    </span><span class="c1">// present for any status after 'accepted'</span>
+<span class="w">    </span><span class="s2">"analyses"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"179"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"time"</span><span class="o">:</span><span class="w"> </span><span class="s2">"2019-04-15T08:05:08+00:00"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"runs"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"clean"</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">"error"</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">"system"</span><span class="o">:</span><span class="w"> </span><span class="s2">"w7"</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">"yara"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">                </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"clean"</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">"error"</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">"system"</span><span class="o">:</span><span class="w"> </span><span class="s2">"w7x64"</span><span class="p">,</span>
+<span class="w">                    </span><span class="s2">"yara"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">            </span><span class="s2">"tags"</span><span class="o">:</span><span class="w"> </span><span class="p">[],</span>
+<span class="w">            </span><span class="s2">"analysisid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"127"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"duration"</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"encrypted"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"md5"</span><span class="o">:</span><span class="w"> </span><span class="s2">"098f6bcd4621d373cade4e832627b4f6"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"sha1"</span><span class="o">:</span><span class="w"> </span><span class="s2">"a94a8fe5ccb19ba61c4c0873d391e987982fbbd3"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"sha256"</span><span class="o">:</span><span class="w"> </span><span class="s2">"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"filename"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Sample.exe"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"scriptname"</span><span class="o">:</span><span class="w"> </span><span class="s2">"defaultwindowsofficecookbook.jbs"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"status"</span><span class="o">:</span><span class="w"> </span><span class="s2">"finished"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"comments"</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">            </span><span class="c1">// Present while Live Interaction is active</span>
+<span class="w">            </span><span class="s2">"live-interaction-url"</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://joesandbox.com/analysis/123456789"</span>
+<span class="w">        </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"180"</span><span class="p">,</span>
+<span class="w">            </span><span class="p">...</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id4">
+<h4>Discussion<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id4" title="Permalink to this heading">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">status</span></code> field is one of <code class="docutils literal notranslate"><span class="pre">submitted,</span> <span class="pre">accepted,</span> <span class="pre">running,</span> <span class="pre">finished</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">analyses</span></code> field contains the same information as in <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#apiv2-analysis-info"><span class="std std-ref">/v2/analysis/info</span></a>.</p>
+<p>If the submission resulted in an error, this call fails.</p>
+</section>
+</section>
+<section id="v2-analysis-info">
+<span id="apiv2-analysis-info"></span><h3><code class="docutils literal notranslate"><span class="pre">/v2/analysis/info</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-info" title="Permalink to this heading">¶</a></h3>
+<p>Show information about an analysis.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>webid</p></td>
+<td><p>yes</p></td>
+<td><p>the id of the analysis</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id5">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id5" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"analysisid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"status"</span><span class="o">:</span><span class="w"> </span><span class="s2">"finished"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"score"</span><span class="o">:</span><span class="w"> </span><span class="mf">42</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"classification"</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"threatname"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Unknown"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"comments"</span><span class="o">:</span><span class="w"> </span><span class="s2">"a sample comment"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"filename"</span><span class="o">:</span><span class="w"> </span><span class="s2">"sample.exe"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"scriptname"</span><span class="o">:</span><span class="w"> </span><span class="s2">"default.jbs"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"time"</span><span class="o">:</span><span class="w"> </span><span class="s2">"2017-08-11T16:06:32+02:00"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"duration"</span><span class="o">:</span><span class="w"> </span><span class="mf">150</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"encrypted"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"md5"</span><span class="o">:</span><span class="w"> </span><span class="s2">"0cbc6611f5540bd0809a388dc95a615b"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"sha1"</span><span class="o">:</span><span class="w"> </span><span class="s2">"640ab2bae07bedc4c163f679a746f7ab7fb5d1fa"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"sha256"</span><span class="o">:</span><span class="w"> </span><span class="s2">"532eaabd9574880 [...] 299550d7a6e0f345e25"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"tags"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"internal"</span><span class="p">,</span><span class="w"> </span><span class="s2">"important"</span><span class="p">],</span>
+<span class="w">    </span><span class="c1">// Present while Live Interaction is active</span>
+<span class="w">    </span><span class="s2">"live-interaction-url"</span><span class="o">:</span><span class="w"> </span><span class="s2">"https://joesandbox.com/analysis/123456789"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"runs"</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">        </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"error"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Unable to run"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"system"</span><span class="o">:</span><span class="w"> </span><span class="s2">"w7"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"yara"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"sigma"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"score"</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span>
+<span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"error"</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"system"</span><span class="o">:</span><span class="w"> </span><span class="s2">"w7x64"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"yara"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">        </span><span class="s2">"sigma"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"score"</span><span class="o">:</span><span class="w"> </span><span class="mf">42</span>
+<span class="w">    </span><span class="p">}]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id6">
+<h4>Discussion<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id6" title="Permalink to this heading">¶</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">analysisid</span></code> field can be a string, or <code class="docutils literal notranslate"><span class="pre">null</span></code> if the analysis has just started.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">status</span></code> field is one of <code class="docutils literal notranslate"><span class="pre">submitted,</span> <span class="pre">running,</span> <span class="pre">finished</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">runs:detection</span></code> field is one of <code class="docutils literal notranslate"><span class="pre">unknown,</span> <span class="pre">clean,</span> <span class="pre">suspicious,</span> <span class="pre">malicious</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">runs:error</span></code> field is either <code class="docutils literal notranslate"><span class="pre">null</span></code> or a string describing the error.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">time</span></code> field is formatted according to ISO 8601.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">duration</span></code> field contains the duration of the analysis in seconds. (Only for finished analyses.)</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">encrypted</span></code> field is <code class="docutils literal notranslate"><span class="pre">true</span></code> if the analysis data is encrypted.</p>
+<p>If you require more information than this, use <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#apiv2-analysis-download"><span class="std std-ref">/v2/analysis/download</span></a> to download
+a reduced or full report.</p>
+</section>
+</section>
+<section id="v2-analysis-download">
+<span id="apiv2-analysis-download"></span><h3><code class="docutils literal notranslate"><span class="pre">/v2/analysis/download</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-download" title="Permalink to this heading">¶</a></h3>
+<p>Download a resource belonging to a report. This can be the full report, dropped binaries, etc.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>webid</p></td>
+<td><p>yes</p></td>
+<td><p>the id of the analysis</p></td>
+</tr>
+<tr class="row-even"><td><p>run</p></td>
+<td></td>
+<td><p>The number of the run. By default Joe Sandbox
+chooses an appropriate run automatically.</p></td>
+</tr>
+<tr class="row-odd"><td><p>type</p></td>
+<td></td>
+<td><p>The resource type to download.
+Defaults to <code class="docutils literal notranslate"><span class="pre">html</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id7">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id7" title="Permalink to this heading">¶</a></h4>
+<p>This API command does not respond with a JSON object on success but directly sends the requested
+resource. On error, it responds with the usual JSON error object.</p>
+</section>
+<section id="id8">
+<h4>Discussion<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id8" title="Permalink to this heading">¶</a></h4>
+<p>Valid types are listed below. For a discussion of them, refer to <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/reportformats.html"><span class="doc">Report Formats</span></a>.</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>human readable reports</p></td>
+<td><p>html, lighthtml, executive, pdf, iochtml</p></td>
+</tr>
+<tr class="row-even"><td><p>xml</p></td>
+<td><p>xml, lightxml, clusterxml, irxml, iocxml</p></td>
+</tr>
+<tr class="row-odd"><td><p>json</p></td>
+<td><p>json, jsonfixed, lightjson, lightjsonfixed, irjson, irjsonfixed</p></td>
+</tr>
+<tr class="row-even"><td><p>other</p></td>
+<td><p>shoots (screenshots), ishots (interesting screen shots), openioc,
+maec, misp, stix, graphreports, memstrings, binstrings, sample,
+cookbook, bins (dropped files), unpackpe (unpacked PE files),
+unpack, ida, pcap, pcapslim, memdumps, yara, functionlogs,
+powershelllogs, eventlogs, iocxml (This list is subject to change)</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="v2-analysis-list">
+<span id="apiv2-analysis-list"></span><h3><code class="docutils literal notranslate"><span class="pre">/v2/analysis/list</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-list" title="Permalink to this heading">¶</a></h3>
+<p>List all analyses (in descending order, starting with most recent).</p>
+<p>The list can be filtered using the described search parameters.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>filename</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-even"><td><p>url</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-odd"><td><p>detection</p></td>
+<td><p>no</p></td>
+<td><p>one of clean, suspicious, malicious, unknown</p></td>
+</tr>
+<tr class="row-even"><td><p>threatname</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-odd"><td><p>tag</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-even"><td><p>comments</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-odd"><td><p>md5</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-even"><td><p>sha1</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-odd"><td><p>sha256</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-even"><td><p>before-date</p></td>
+<td><p>no</p></td>
+<td><p>a date ISO 8601 format: YYYY-MM-DD</p></td>
+</tr>
+<tr class="row-odd"><td><p>after-date</p></td>
+<td><p>no</p></td>
+<td><p>a date in ISO 8601 format: YYYY-MM-DD</p></td>
+</tr>
+<tr class="row-even"><td><p>pagination</p></td>
+<td><p>no</p></td>
+<td><p>“1” to enable pagination (See <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#apiv2-pagination"><span class="std std-ref">Pagination</span></a>.)</p></td>
+</tr>
+<tr class="row-odd"><td><p>pagination_next</p></td>
+<td><p>no</p></td>
+<td><p>A pagination token to get more results.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id9">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id9" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"10001"</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"10000"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h4>Discussion<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id10" title="Permalink to this heading">¶</a></h4>
+<p>If you set one of the filters, the route returns only webids of analyses that match these.</p>
+<p>If several of the other fields are set, all of them must match.</p>
+<p>The search is case-insensitive.</p>
+<p>For some fields, only exact matches are considered, for others also substring matches
+are valid (see the description column above). E.g. if a URL is “<a class="reference external" href="https://www.google.com/my-page">https://www.google.com/my-page</a>”, the <code class="docutils literal notranslate"><span class="pre">url</span></code> search string
+“google.com” will match.</p>
+<p><code class="docutils literal notranslate"><span class="pre">before-date</span></code> and <code class="docutils literal notranslate"><span class="pre">after-date</span></code> do <strong>not</strong> include the given date. On Cloud, CET/CEST time zone is applied.</p>
+</section>
+</section>
+<section id="v2-analysis-search">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/analysis/search</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-search" title="Permalink to this heading">¶</a></h3>
+<p>Search through all analyses.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>q</p></td>
+<td><p>no</p></td>
+<td><p>a general search string (see discussion)</p></td>
+</tr>
+<tr class="row-even"><td><p>filename</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-odd"><td><p>url</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-even"><td><p>detection</p></td>
+<td><p>no</p></td>
+<td><p>one of clean, suspicious, malicious, unknown</p></td>
+</tr>
+<tr class="row-odd"><td><p>threatname</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-even"><td><p>tag</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-odd"><td><p>comments</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-even"><td><p>md5</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-odd"><td><p>sha1</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-even"><td><p>sha256</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-odd"><td><p>before-date</p></td>
+<td><p>no</p></td>
+<td><p>a date ISO 8601 format: YYYY-MM-DD</p></td>
+</tr>
+<tr class="row-even"><td><p>after-date</p></td>
+<td><p>no</p></td>
+<td><p>a date in ISO 8601 format: YYYY-MM-DD</p></td>
+</tr>
+<tr class="row-odd"><td><p>ioc-domain</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-even"><td><p>ioc-dropped-file</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+<tr class="row-odd"><td><p>ioc-public-ip</p></td>
+<td><p>no</p></td>
+<td><p>exact match</p></td>
+</tr>
+<tr class="row-even"><td><p>ioc-url</p></td>
+<td><p>no</p></td>
+<td><p>substring search</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id11">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id11" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"analysisid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"4"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"status"</span><span class="o">:</span><span class="w"> </span><span class="s2">"finished"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"score"</span><span class="o">:</span><span class="w"> </span><span class="mf">42</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"classification"</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"threatname"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Unknown"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"comments"</span><span class="o">:</span><span class="w"> </span><span class="s2">"a sample comment"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"filename"</span><span class="o">:</span><span class="w"> </span><span class="s2">"sample.exe"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"scriptname"</span><span class="o">:</span><span class="w"> </span><span class="s2">"default.jbs"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"time"</span><span class="o">:</span><span class="w"> </span><span class="s2">"2017-08-11T16:06:32+02:00"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"duration"</span><span class="o">:</span><span class="w"> </span><span class="mf">150</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"encrypted"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"md5"</span><span class="o">:</span><span class="w"> </span><span class="s2">"0cbc6611f5540bd0809a388dc95a615b"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"sha1"</span><span class="o">:</span><span class="w"> </span><span class="s2">"640ab2bae07bedc4c163f679a746f7ab7fb5d1fa"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"sha256"</span><span class="o">:</span><span class="w"> </span><span class="s2">"532eaabd9574880 [...] 299550d7a6e0f345e25"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"tags"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"internal"</span><span class="p">,</span><span class="w"> </span><span class="s2">"important"</span><span class="p">],</span>
+<span class="w">    </span><span class="s2">"runs"</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span>
+<span class="w">        </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"error"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Unable to run"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"system"</span><span class="o">:</span><span class="w"> </span><span class="s2">"w7"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"yara"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"sigma"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"score"</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span>
+<span class="w">    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">"detection"</span><span class="o">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"error"</span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"system"</span><span class="o">:</span><span class="w"> </span><span class="s2">"w7x64"</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"yara"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="w">        </span><span class="s2">"sigma"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="s2">"score"</span><span class="o">:</span><span class="w"> </span><span class="mf">42</span>
+<span class="w">    </span><span class="p">}]</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"webid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"101"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"analysisid"</span><span class="o">:</span><span class="w"> </span><span class="s2">"5"</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+<section id="id12">
+<h4>Discussion<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id12" title="Permalink to this heading">¶</a></h4>
+<p>The route returns analyses that match the given search parameters.</p>
+<p>You must either set <code class="docutils literal notranslate"><span class="pre">q</span></code> <strong>or</strong> one or several of the other search parameters.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">q</span></code> is set, the server searches the following fields for it:
+<strong>md5, sha1, sha256, filename, threat name, URL, tags, comments</strong></p>
+<p>If several of the other fields are set, all of them must match.</p>
+<p>The search is case-insensitive.</p>
+<p>For some fields, only exact matches are considered, for others also substring matches
+are valid (see the description column above). E.g. if a URL is “<a class="reference external" href="https://www.google.com/my-page">https://www.google.com/my-page</a>”, the <code class="docutils literal notranslate"><span class="pre">url</span></code> search string
+“google.com” will match.</p>
+<p><code class="docutils literal notranslate"><span class="pre">before-date</span></code> and <code class="docutils literal notranslate"><span class="pre">after-date</span></code> do <strong>not</strong> include the given date. On Cloud, CET/CEST time zone is applied.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In case too many analyses match the conditions, the route returns an error object.</p>
+<p>In this case, either refine your conditions, or use the <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#apiv2-analysis-list"><span class="std std-ref">/v2/analysis/list</span></a> route that supports pagination.</p>
+</div>
+</section>
+</section>
+<section id="v2-analysis-delete">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/analysis/delete</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-delete" title="Permalink to this heading">¶</a></h3>
+<p>Delete an analysis.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>webid</p></td>
+<td><p>yes</p></td>
+<td><p>the id of the analysis</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id13">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id13" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"deleted"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-cookbook-new">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/cookbook/new</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-cookbook-new" title="Permalink to this heading">¶</a></h3>
+<p>Add a new cookbook.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>name</p></td>
+<td><p>yes</p></td>
+<td><p>The name for the cookbook.</p></td>
+</tr>
+<tr class="row-even"><td><p>comments</p></td>
+<td></td>
+<td><p>A comment to store alongside the cookbook.</p></td>
+</tr>
+<tr class="row-odd"><td><p>code</p></td>
+<td><p>yes</p></td>
+<td><p>The content of the cookbook.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id14">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id14" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-cookbook-list">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/cookbook/list</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-cookbook-list" title="Permalink to this heading">¶</a></h3>
+<p>List all cookbooks.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id15">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id15" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"My Cookbook"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-cookbook-info">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/cookbook/info</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-cookbook-info" title="Permalink to this heading">¶</a></h3>
+<p>Show the details of a cookbook.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the cookbook.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id16">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id16" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"My Cookbook"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"comments"</span><span class="o">:</span><span class="w"> </span><span class="s2">"A comment"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"code"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Script ... EndScript"</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-cookbook-delete">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/cookbook/delete</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-cookbook-delete" title="Permalink to this heading">¶</a></h3>
+<p>Delete a cookbook.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the cookbook.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id17">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id17" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"deleted"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-yara-new">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/yara/new</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-yara-new" title="Permalink to this heading">¶</a></h3>
+<p>Add a new yara rule.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>name</p></td>
+<td><p>yes</p></td>
+<td><p>The name for the yara rule.</p></td>
+</tr>
+<tr class="row-even"><td><p>comments</p></td>
+<td></td>
+<td><p>A comment to store alongside the rule.</p></td>
+</tr>
+<tr class="row-odd"><td><p>code</p></td>
+<td><p>yes</p></td>
+<td><p>The content of the rule.</p></td>
+</tr>
+<tr class="row-even"><td><p>shared</p></td>
+<td></td>
+<td><p>Boolean (encoded as <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">0</span></code>) to specify if the rule
+should be shared with the sub-users.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id18">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id18" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-yara-list">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/yara/list</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-yara-list" title="Permalink to this heading">¶</a></h3>
+<p>List all yara rules.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id19">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id19" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"My Yara Rule"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-yara-info">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/yara/info</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-yara-info" title="Permalink to this heading">¶</a></h3>
+<p>Show the details of a yara.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the yara rule.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id20">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id20" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"My Yara Rule"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"comments"</span><span class="o">:</span><span class="w"> </span><span class="s2">"A comment"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"shared"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"code"</span><span class="o">:</span><span class="w"> </span><span class="s2">"..."</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-yara-delete">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/yara/delete</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-yara-delete" title="Permalink to this heading">¶</a></h3>
+<p>Delete a yara rule.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the yara rule.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id21">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id21" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"deleted"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-sigma-new">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/sigma/new</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-sigma-new" title="Permalink to this heading">¶</a></h3>
+<p>Add a new sigma rule.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>name</p></td>
+<td><p>yes</p></td>
+<td><p>The name for the sigma rule.</p></td>
+</tr>
+<tr class="row-even"><td><p>comments</p></td>
+<td></td>
+<td><p>A comment to store alongside the rule.</p></td>
+</tr>
+<tr class="row-odd"><td><p>code</p></td>
+<td><p>yes</p></td>
+<td><p>The content of the rule.</p></td>
+</tr>
+<tr class="row-even"><td><p>shared</p></td>
+<td></td>
+<td><p>Boolean (encoded as <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">0</span></code>) to specify if the rule
+should be shared with the sub-users.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id22">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id22" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-sigma-list">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/sigma/list</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-sigma-list" title="Permalink to this heading">¶</a></h3>
+<p>List all sigma rules.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id23">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id23" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"My Sigma Rule"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-sigma-info">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/sigma/info</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-sigma-info" title="Permalink to this heading">¶</a></h3>
+<p>Show the details of a sigma.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the sigma rule.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id24">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id24" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"3"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"My Sigma Rule"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"comments"</span><span class="o">:</span><span class="w"> </span><span class="s2">"A comment"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"shared"</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"code"</span><span class="o">:</span><span class="w"> </span><span class="s2">"..."</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-sigma-delete">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/sigma/delete</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-sigma-delete" title="Permalink to this heading">¶</a></h3>
+<p>Delete a sigma rule.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the sigma rule.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="v2-users-new">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/users/new</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-new" title="Permalink to this heading">¶</a></h3>
+<p>Create a new user.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>username</p></td>
+<td><p>yes</p></td>
+<td><p>The username for the user.</p></td>
+</tr>
+<tr class="row-even"><td><p>password</p></td>
+<td><p>yes</p></td>
+<td><p>A password for the user.</p></td>
+</tr>
+<tr class="row-odd"><td><p>email</p></td>
+<td></td>
+<td><p>Email address of the user.</p></td>
+</tr>
+<tr class="row-even"><td><p>comments</p></td>
+<td></td>
+<td><p>A comment describing the user.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Additional optional parameters for Joe Sandbox Cloud:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>per-user-quota</p></td>
+<td><p>false</p></td>
+<td><p>Limit this user’s number of analyses individually</p></td>
+</tr>
+<tr class="row-odd"><td><p>quota-daily</p></td>
+<td><p>0</p></td>
+<td><p>Daily allowed number of analyses (only effective if per-user-quota is true)</p></td>
+</tr>
+<tr class="row-even"><td><p>quota-monthly</p></td>
+<td><p>0</p></td>
+<td><p>Monthly allowed number of analyses (only effective if per-user-quota is true)</p></td>
+</tr>
+<tr class="row-odd"><td><p>share-reports</p></td>
+<td><p>false</p></td>
+<td><p>Share this user’s reports with other users in your group. If global
+sharing for all users is enabled, this will always be set to true implicitly</p></td>
+</tr>
+<tr class="row-even"><td><p>dashboard-team-access</p></td>
+<td><p>false</p></td>
+<td><p>Allow this user to access the team’s data on the dashboard</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id25">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id25" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"40"</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-users-update">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/users/update</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-update" title="Permalink to this heading">¶</a></h3>
+<p>Update a user.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the to-be-updated user.</p></td>
+</tr>
+<tr class="row-even"><td><p>password</p></td>
+<td></td>
+<td><p>A password for the user.</p></td>
+</tr>
+<tr class="row-odd"><td><p>email</p></td>
+<td></td>
+<td><p>Email address of the user.</p></td>
+</tr>
+<tr class="row-even"><td><p>comments</p></td>
+<td></td>
+<td><p>A comment describing the user.</p></td>
+</tr>
+<tr class="row-odd"><td><p>active</p></td>
+<td></td>
+<td><p>Enable or disable the user. Defaults to true. Use “0” or “1”.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Additional optional parameters for Joe Sandbox Cloud:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>per-user-quota</p></td>
+<td><p>Limit this user’s number of analyses individually</p></td>
+</tr>
+<tr class="row-odd"><td><p>quota-daily</p></td>
+<td><p>Daily allowed number of analyses (only effective if per-user-quota is true)</p></td>
+</tr>
+<tr class="row-even"><td><p>quota-monthly</p></td>
+<td><p>Monthly allowed number of analyses (only effective if per-user-quota is true)</p></td>
+</tr>
+<tr class="row-odd"><td><p>share-reports</p></td>
+<td><p>Share this user’s reports with other users in the same sub group</p></td>
+</tr>
+<tr class="row-even"><td><p>dashboard-team-access</p></td>
+<td><p>Allow this user to access the team’s data on the dashboard</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id26">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id26" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"success"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-users-delete">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/users/delete</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-delete" title="Permalink to this heading">¶</a></h3>
+<p>Delete a user.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the user to delete.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id27">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id27" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"deleted"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-users-generate-apikey">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/users/generate_apikey</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-generate-apikey" title="Permalink to this heading">¶</a></h3>
+<p>Generate a new api key for the specified user. This will replace the old api key.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the user.</p></td>
+</tr>
+<tr class="row-even"><td><p>accept-tac</p></td>
+<td><p>on cloud pro</p></td>
+<td><p>Accept the Terms and Conditions and the
+Data Protection Policy of Joe Sandbox Cloud.</p></td>
+</tr>
+</tbody>
+</table>
+<p>[1] Joe Sandbox Cloud Pro Terms and Conditions: <a class="reference external" href="https://jbxcloud.joesecurity.org/download/termsandconditions.pdf">https://jbxcloud.joesecurity.org/download/termsandconditions.pdf</a></p>
+<section id="id28">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id28" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"apikey"</span><span class="o">:</span><span class="w"> </span><span class="s2">"9017690d..."</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-users-list">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/users/list</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-list" title="Permalink to this heading">¶</a></h3>
+<p>Get a list of your users.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id29">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id29" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"username"</span><span class="o">:</span><span class="w"> </span><span class="s2">"User 1"</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"101"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"username"</span><span class="o">:</span><span class="w"> </span><span class="s2">"User 2"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-users-info">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/users/info</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-info" title="Permalink to this heading">¶</a></h3>
+<p>Get detailed information about a user.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>id</p></td>
+<td><p>yes</p></td>
+<td><p>The id of the user.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id30">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id30" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"id"</span><span class="o">:</span><span class="w"> </span><span class="s2">"100"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"username"</span><span class="o">:</span><span class="w"> </span><span class="s2">"User 1"</span>
+<span class="w">    </span><span class="s2">"email"</span><span class="o">:</span><span class="w"> </span><span class="s2">"user@example.net"</span><span class="p">,</span><span class="w">  </span><span class="cm">/* string or null */</span>
+<span class="w">    </span><span class="s2">"comments"</span><span class="o">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"active"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"priority"</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span><span class="w">                 </span><span class="cm">/* only available in on-premise products */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-server-online">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/server/online</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-online" title="Permalink to this heading">¶</a></h3>
+<p>Check if the Joe Sandbox analysis back end is online or in maintenance mode.</p>
+<p>When the back end is in maintenance, all new submissions are queued until the maintenance is over.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id31">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id31" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"online"</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-server-info">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/server/info</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-info" title="Permalink to this heading">¶</a></h3>
+<p>Query information about the server.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id32">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id32" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"queuesize"</span><span class="o">:</span><span class="w"> </span><span class="mf">5</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-server-systems">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/server/systems</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-systems" title="Permalink to this heading">¶</a></h3>
+<p>Retrieve a list of systems on the server.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id33">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id33" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">   </span><span class="s2">"name"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"w7"</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">"description"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"Windows 7"</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">"arch"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"WINDOWS"</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">"count"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">1</span>
+<span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="s2">"name"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"w7x64"</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">"description"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"Windows 7 x64"</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">"arch"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s2">"WINDOWS"</span><span class="p">,</span>
+<span class="w">   </span><span class="s2">"count"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mf">3</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+<section id="id34">
+<h4>Discussion<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id34" title="Permalink to this heading">¶</a></h4>
+<p>The architecture (arch) is one of these options: <code class="docutils literal notranslate"><span class="pre">WINDOWS,</span> <span class="pre">MAC,</span> <span class="pre">LINUX,</span> <span class="pre">ANDROID</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">count</span></code> field specifies how many of these systems exist.</p>
+</section>
+</section>
+<section id="v2-server-lia-countries">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/server/lia_countries</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-lia-countries" title="Permalink to this heading">¶</a></h3>
+<p>Retrieve a list of localized internet anonymization countries.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id35">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id35" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Switzerland"</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"United States of America"</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Africa"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-server-languages-and-locales">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/server/languages_and_locales</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-languages-and-locales" title="Permalink to this heading">¶</a></h3>
+<p>Retrieve a list of available language and locale combinations for Windows analyzers.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id36">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id36" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Spanish - Panama"</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Spanish - Peru"</span>
+<span class="p">},</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"name"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Swedish - Sweden"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-securitylog-download">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/securitylog/download</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-securitylog-download" title="Permalink to this heading">¶</a></h3>
+<p>Download the security log. This route is only available to admin users.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+<tr class="row-odd"><td><p>days</p></td>
+<td><p>no</p></td>
+<td><p>number of days the log should cover
+(default: 30)</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id37">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id37" title="Permalink to this heading">¶</a></h4>
+<p>This API command does not return the default JSON object, but directly returns the security log (which is also in JSON format).
+On error, it responds with the usual JSON error object.</p>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+<span class="w">    </span><span class="s2">"datetime"</span><span class="o">:</span><span class="w"> </span><span class="s2">"2024-09-02T13:30:45+00:00"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"event"</span><span class="o">:</span><span class="w"> </span><span class="s2">"authn_login_success"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"user"</span><span class="o">:</span><span class="w"> </span><span class="s2">"test-user"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"action_by"</span><span class="o">:</span><span class="w"> </span><span class="s2">"test-user"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"level"</span><span class="o">:</span><span class="w"> </span><span class="s2">"INFO"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"description"</span><span class="o">:</span><span class="w"> </span><span class="s2">"test-user successfully logged in"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"useragent"</span><span class="o">:</span><span class="w"> </span><span class="s2">"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"source_ip"</span><span class="o">:</span><span class="w"> </span><span class="s2">"1.2.3.4"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"request_method"</span><span class="o">:</span><span class="w"> </span><span class="s2">"POST"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"request_uri"</span><span class="o">:</span><span class="w"> </span><span class="s2">"/login"</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="v2-account-info">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/account/info</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-account-info" title="Permalink to this heading">¶</a></h3>
+<p>Query information about your account.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>apikey</p></td>
+<td><p>yes</p></td>
+<td><p>your API key</p></td>
+</tr>
+</tbody>
+</table>
+<section id="id38">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id38" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"cloud"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"quota"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">"daily"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="s2">"current"</span><span class="o">:</span><span class="w">   </span><span class="mf">120</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"limit"</span><span class="o">:</span><span class="w">     </span><span class="mf">300</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"remaining"</span><span class="o">:</span><span class="w"> </span><span class="mf">180</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="s2">"monthly"</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="s2">"current"</span><span class="o">:</span><span class="w">   </span><span class="mf">723</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"limit"</span><span class="o">:</span><span class="w">     </span><span class="mf">2500</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"remaining"</span><span class="o">:</span><span class="w"> </span><span class="mf">1777</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="http-status">
+<h2>HTTP Status<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#http-status" title="Permalink to this heading">¶</a></h2>
+<p>The API responds with an appropriate HTTP status. We currently use <code class="docutils literal notranslate"><span class="pre">200</span></code> for good responses, <code class="docutils literal notranslate"><span class="pre">4xx</span></code> for errors
+and <code class="docutils literal notranslate"><span class="pre">503</span></code> to show that the server is offline or under maintenance.</p>
+</section>
+<section id="error-codes">
+<span id="apiv2-error-codes"></span><h2>Error Codes<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#error-codes" title="Permalink to this heading">¶</a></h2>
+<p>When the API encounters an error, a JSON error object is passed to the client
+as described above. Some errors have a specific error code so the client can
+react accordingly.</p>
+<p>Typically an appropriate HTTP status code is supplied.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Error Code</p></th>
+<th class="head"><p>Typical HTTP status</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>400</p></td>
+<td><p>An unspecified error happened.</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>400</p></td>
+<td><p>An API parameter is missing.</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>400, 404</p></td>
+<td><p>An API parameter is invalid.</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>403</p></td>
+<td><p>The API key is invalid.</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>503</p></td>
+<td><p>Joe Sandbox is offline.</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>500</p></td>
+<td><p>An internal server error occurred.</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>403</p></td>
+<td><p>The user does not have the required permissions.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="deprecated-routes">
+<h2>Deprecated routes<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#deprecated-routes" title="Permalink to this heading">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This documentation is only for existing integrations. Please don’t use these routes anymore, they will be
+removed at some point in the future.</p>
+</div>
+<section id="v2-analysis-submit">
+<h3><code class="docutils literal notranslate"><span class="pre">/v2/analysis/submit</span></code><a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-submit" title="Permalink to this heading">¶</a></h3>
+<p>Please use <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#apiv2-submission-new"><span class="std std-ref">/v2/submission/new</span></a> instead of this endpoint.</p>
+<p>Submit a sample, url or cookbook for analysis.</p>
+<section id="parameters">
+<h4>Parameters<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#parameters" title="Permalink to this heading">¶</a></h4>
+<p>See <a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#apiv2-submission-new"><span class="std std-ref">/v2/submission/new</span></a> for the parameters.</p>
+</section>
+<section id="id39">
+<h4>Data Object<a class="headerlink" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#id39" title="Permalink to this heading">¶</a></h4>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="s2">"webids"</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"100001"</span><span class="p">,</span><span class="w"> </span><span class="s2">"100006"</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=index.html">
+              <img class="logo" src="./RESTful Web API v2 — Joe Sandbox v41.0.0 Charoite documentation_files/logo.png" alt="Logo">
+            </a></p><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/usermanagement.html">Account Management</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#">RESTful Web API v2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#introduction">Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#python-scripts">Python Scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#api-key">API Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#responses">Responses</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#api">API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-submission-new"><code class="docutils literal notranslate"><span class="pre">/v2/submission/new</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-submission-delete"><code class="docutils literal notranslate"><span class="pre">/v2/submission/delete</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-submission-list"><code class="docutils literal notranslate"><span class="pre">/v2/submission/list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-submission-info"><code class="docutils literal notranslate"><span class="pre">/v2/submission/info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-info"><code class="docutils literal notranslate"><span class="pre">/v2/analysis/info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-download"><code class="docutils literal notranslate"><span class="pre">/v2/analysis/download</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-list"><code class="docutils literal notranslate"><span class="pre">/v2/analysis/list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-search"><code class="docutils literal notranslate"><span class="pre">/v2/analysis/search</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-delete"><code class="docutils literal notranslate"><span class="pre">/v2/analysis/delete</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-cookbook-new"><code class="docutils literal notranslate"><span class="pre">/v2/cookbook/new</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-cookbook-list"><code class="docutils literal notranslate"><span class="pre">/v2/cookbook/list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-cookbook-info"><code class="docutils literal notranslate"><span class="pre">/v2/cookbook/info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-cookbook-delete"><code class="docutils literal notranslate"><span class="pre">/v2/cookbook/delete</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-yara-new"><code class="docutils literal notranslate"><span class="pre">/v2/yara/new</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-yara-list"><code class="docutils literal notranslate"><span class="pre">/v2/yara/list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-yara-info"><code class="docutils literal notranslate"><span class="pre">/v2/yara/info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-yara-delete"><code class="docutils literal notranslate"><span class="pre">/v2/yara/delete</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-sigma-new"><code class="docutils literal notranslate"><span class="pre">/v2/sigma/new</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-sigma-list"><code class="docutils literal notranslate"><span class="pre">/v2/sigma/list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-sigma-info"><code class="docutils literal notranslate"><span class="pre">/v2/sigma/info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-sigma-delete"><code class="docutils literal notranslate"><span class="pre">/v2/sigma/delete</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-new"><code class="docutils literal notranslate"><span class="pre">/v2/users/new</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-update"><code class="docutils literal notranslate"><span class="pre">/v2/users/update</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-delete"><code class="docutils literal notranslate"><span class="pre">/v2/users/delete</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-generate-apikey"><code class="docutils literal notranslate"><span class="pre">/v2/users/generate_apikey</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-list"><code class="docutils literal notranslate"><span class="pre">/v2/users/list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-users-info"><code class="docutils literal notranslate"><span class="pre">/v2/users/info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-online"><code class="docutils literal notranslate"><span class="pre">/v2/server/online</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-info"><code class="docutils literal notranslate"><span class="pre">/v2/server/info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-systems"><code class="docutils literal notranslate"><span class="pre">/v2/server/systems</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-lia-countries"><code class="docutils literal notranslate"><span class="pre">/v2/server/lia_countries</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-server-languages-and-locales"><code class="docutils literal notranslate"><span class="pre">/v2/server/languages_and_locales</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-securitylog-download"><code class="docutils literal notranslate"><span class="pre">/v2/securitylog/download</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-account-info"><code class="docutils literal notranslate"><span class="pre">/v2/account/info</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#http-status">HTTP Status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#error-codes">Error Codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#deprecated-routes">Deprecated routes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage%2Fwebapi.html#v2-analysis-submit"><code class="docutils literal notranslate"><span class="pre">/v2/analysis/submit</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/joelabapi.html">Joe Lab API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/joelab.html">Joe Lab</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/sso.html">Single Sign-On (OpenID Connect)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/submissionpage.html">Submission Types and Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/liveinteraction.html">Live Interaction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/zips.html">ZIPs and other Archives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/submissionsettings.html">Submission Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/reportformats.html">Report Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/integrations.html">Integrations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/yara.html">Yara</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/sigma.html">Sigma</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/cookbooks.html">Analysis Cookbooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/filters.html">Filters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/idaplugin.html">IDA Pro Plugin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/view.html">Joe Sandbox View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/endpoint.html">Joe Sandbox Detect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/uploader.html">Joe Sandbox Uploader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/mailmonitor.html">Joe Sandbox Mail Monitor</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/usermanagement.html" title="previous chapter">Account Management</a></li>
+      <li>Next: <a href="https://jbxcloud.joesecurity.org/userguide?sphinxurl=usage/joelabapi.html" title="next chapter">Joe Lab API</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: block;" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="https://jbxcloud.joesecurity.org/userguide/search" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <input type="submit" value="Go">
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      ©2025, Joe Security LLC.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+      div.grammarly-desktop-integration {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select:none;
+        user-select:none;
+      }
+
+      div.grammarly-desktop-integration:before {
+        content: attr(data-content);
+      }
+    </style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>
