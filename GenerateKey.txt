@@ -1,0 +1,11 @@
+gpg --full-generate-key
+
+gpg --list-keys
+gpg --list-secret-keys
+
+gpg --export -a "mhuang" > publickey.asc
+gpg --export-secret-keys -a "mhuang" > privatekey.asc
+
+
+
+
